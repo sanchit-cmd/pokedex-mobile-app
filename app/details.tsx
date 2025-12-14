@@ -25,7 +25,12 @@ interface PokemonDetails {
   speed: number;
   abilities: string[];
   moves: string[];
-  spriteVariants: { front: string; back: string; shiny: string; shinyBack: string };
+  spriteVariants: {
+    front: string;
+    back: string;
+    shiny: string;
+    shinyBack: string;
+  };
 }
 
 const typeColors: Record<string, string> = {
@@ -65,7 +70,9 @@ export default function Details() {
   const router = useRouter();
   const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedSprite, setSelectedSprite] = useState<"front" | "back" | "shiny" | "shinyBack">("front");
+  const [selectedSprite, setSelectedSprite] = useState<
+    "front" | "back" | "shiny" | "shinyBack"
+  >("front");
 
   useEffect(() => {
     async function fetchPokemonDetails() {
@@ -146,14 +153,20 @@ export default function Details() {
             },
           ]}
         >
-          <Image source={{ uri: pokemon.spriteVariants[selectedSprite] }} style={styles.pokemonImage} />
+          <Image
+            source={{ uri: pokemon.spriteVariants[selectedSprite] }}
+            style={styles.pokemonImage}
+          />
           <Text style={styles.pokemonName}>{pokemon.name}</Text>
           <Text style={styles.pokemonType}>{pokemon.type}</Text>
 
           {/* Sprite Variant Selector */}
           <View style={styles.spriteSelector}>
             {["front", "back", "shiny", "shinyBack"].map((sprite) => {
-              const spriteUrl = pokemon.spriteVariants[sprite as keyof typeof pokemon.spriteVariants];
+              const spriteUrl =
+                pokemon.spriteVariants[
+                  sprite as keyof typeof pokemon.spriteVariants
+                ];
               return (
                 <TouchableOpacity
                   key={sprite}
@@ -161,10 +174,17 @@ export default function Details() {
                     styles.spriteOption,
                     selectedSprite === sprite && styles.spriteOptionSelected,
                   ]}
-                  onPress={() => setSelectedSprite(sprite as "front" | "back" | "shiny" | "shinyBack")}
+                  onPress={() =>
+                    setSelectedSprite(
+                      sprite as "front" | "back" | "shiny" | "shinyBack"
+                    )
+                  }
                 >
                   {spriteUrl ? (
-                    <Image source={{ uri: spriteUrl }} style={styles.spriteImage} />
+                    <Image
+                      source={{ uri: spriteUrl }}
+                      style={styles.spriteImage}
+                    />
                   ) : (
                     <Text style={styles.spriteLabel}>N/A</Text>
                   )}
