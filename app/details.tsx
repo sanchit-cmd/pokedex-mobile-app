@@ -25,6 +25,7 @@ interface PokemonDetails {
   speed: number;
   abilities: string[];
   moves: string[];
+  spriteVariants: { front: string; back: string; shiny: string; shinyBack: string };
 }
 
 const typeColors: Record<string, string> = {
@@ -64,6 +65,7 @@ export default function Details() {
   const router = useRouter();
   const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedSprite, setSelectedSprite] = useState<"front" | "back" | "shiny" | "shinyBack">("front");
 
   useEffect(() => {
     async function fetchPokemonDetails() {
@@ -90,6 +92,12 @@ export default function Details() {
           speed: data.stats[5].base_stat,
           abilities: data.abilities.map((a: any) => a.ability.name),
           moves: data.moves.slice(0, 10).map((m: any) => m.move.name),
+          spriteVariants: {
+            front: data.sprites.front_default || "",
+            back: data.sprites.back_default || "",
+            shiny: data.sprites.front_shiny || "",
+            shinyBack: data.sprites.back_shiny || "",
+          },
         });
       } catch (e) {
         console.log(e);
@@ -138,9 +146,32 @@ export default function Details() {
             },
           ]}
         >
-          <Image source={{ uri: pokemon.image }} style={styles.pokemonImage} />
+          <Image source={{ uri: pokemon.spriteVariants[selectedSprite] }} style={styles.pokemonImage} />
           <Text style={styles.pokemonName}>{pokemon.name}</Text>
           <Text style={styles.pokemonType}>{pokemon.type}</Text>
+
+          {/* Sprite Variant Selector */}
+          <View style={styles.spriteSelector}>
+            {["front", "back", "shiny", "shinyBack"].map((sprite) => {
+              const spriteUrl = pokemon.spriteVariants[sprite as keyof typeof pokemon.spriteVariants];
+              return (
+                <TouchableOpacity
+                  key={sprite}
+                  style={[
+                    styles.spriteOption,
+                    selectedSprite === sprite && styles.spriteOptionSelected,
+                  ]}
+                  onPress={() => setSelectedSprite(sprite as "front" | "back" | "shiny" | "shinyBack")}
+                >
+                  {spriteUrl ? (
+                    <Image source={{ uri: spriteUrl }} style={styles.spriteImage} />
+                  ) : (
+                    <Text style={styles.spriteLabel}>N/A</Text>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
 
         <View style={styles.statsGrid}>
@@ -297,6 +328,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textTransform: "capitalize",
     color: "#666",
+  },
+  spriteSelector: {
+    flexDirection: "row",
+    marginTop: 20,
+    gap: 10,
+    justifyContent: "center",
+  },
+  spriteOption: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    backgroundColor: "#f0f0f0",
+    borderWidth: 2,
+    borderColor: "#ddd",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  spriteOptionSelected: {
+    borderColor: "#4169E1",
+    backgroundColor: "#E7F5FF",
+  },
+  spriteImage: {
+    width: 50,
+    height: 50,
+  },
+  spriteLabel: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#999",
   },
   statsGrid: {
     flexDirection: "row",
