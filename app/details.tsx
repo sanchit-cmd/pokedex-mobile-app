@@ -28,8 +28,6 @@ interface PokemonDetails {
   spriteVariants: {
     front: string;
     back: string;
-    shiny: string;
-    shinyBack: string;
   };
 }
 
@@ -71,7 +69,7 @@ export default function Details() {
   const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedSprite, setSelectedSprite] = useState<
-    "front" | "back" | "shiny" | "shinyBack"
+    "front" | "back"
   >("front");
 
   useEffect(() => {
@@ -102,8 +100,6 @@ export default function Details() {
           spriteVariants: {
             front: data.sprites.front_default || "",
             back: data.sprites.back_default || "",
-            shiny: data.sprites.front_shiny || "",
-            shinyBack: data.sprites.back_shiny || "",
           },
         });
       } catch (e) {
@@ -162,7 +158,7 @@ export default function Details() {
 
           {/* Sprite Variant Selector */}
           <View style={styles.spriteSelector}>
-            {["front", "back", "shiny", "shinyBack"].map((sprite) => {
+            {["front", "back"].map((sprite) => {
               const spriteUrl =
                 pokemon.spriteVariants[
                   sprite as keyof typeof pokemon.spriteVariants
@@ -176,7 +172,7 @@ export default function Details() {
                   ]}
                   onPress={() =>
                     setSelectedSprite(
-                      sprite as "front" | "back" | "shiny" | "shinyBack"
+                      sprite as "front" | "back"
                     )
                   }
                 >
