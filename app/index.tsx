@@ -68,7 +68,7 @@ export default function Index() {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://pokeapi.co/api/v2/pokemon?limit=30&offset=${startOffset}`
+        `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${startOffset}`
       );
       const data = await response.json();
 
@@ -91,7 +91,7 @@ export default function Index() {
         setPokemons((prev) => [...prev, ...detailedPokemons]);
         setAllPokemons((prev) => [...prev, ...detailedPokemons]);
       }
-      setOffset(startOffset + 30);
+      setOffset(startOffset + 20);
     } catch (e) {
       console.log(e);
     } finally {
