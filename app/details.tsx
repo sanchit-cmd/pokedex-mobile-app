@@ -68,9 +68,9 @@ export default function Details() {
   const router = useRouter();
   const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedSprite, setSelectedSprite] = useState<
-    "front" | "back"
-  >("front");
+  const [selectedSprite, setSelectedSprite] = useState<"front" | "back">(
+    "front"
+  );
 
   useEffect(() => {
     async function fetchPokemonDetails() {
@@ -170,11 +170,7 @@ export default function Details() {
                     styles.spriteOption,
                     selectedSprite === sprite && styles.spriteOptionSelected,
                   ]}
-                  onPress={() =>
-                    setSelectedSprite(
-                      sprite as "front" | "back"
-                    )
-                  }
+                  onPress={() => setSelectedSprite(sprite as "front" | "back")}
                 >
                   {spriteUrl ? (
                     <Image
